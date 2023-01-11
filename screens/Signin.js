@@ -1,7 +1,7 @@
-import { useState,useEffect,useCallback, useContext } from "react";
+import { useState,useEffect,useCallback,useContext } from "react";
 import { AppContext } from "../utils/globals";
 import { SafeArea } from "../utils/safearea";
-import { View,Text,StyleSheet,ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View,Text,StyleSheet,ScrollView, TouchableOpacity,ActivityIndicator } from "react-native";
 import { Theme } from '../utils/theme';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
@@ -12,24 +12,10 @@ import { faCircleArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as yup from 'yup';
 import { authentication } from "../firebase/firebase.settings";
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 const formRules = yup.object({
-    lastName:yup.string('invalid characters')
-    .min(2,'must be at least 2 characters')
-    .max(32,'not more than 32 characters')
-    .required('This is a compulsory field'),
-
-    firstName:yup.string('invalid characters')
-    .min(2,'must be at least 2 characters')
-    .max(32,'not more than 32 characters')
-    .required('This is a compulsory field'),
-
-    phoneNumber:yup.string('invalid characters')
-    .min(11,'must be up to 11 numbers')
-    .max(17,'must not be more than 17 number')
-    .required('This is a compulsory field'),
-
+    
     email:yup.string('invalid characters')
     .email('must be an email')
     .max(60,'not more than 32 characters')
@@ -38,13 +24,17 @@ const formRules = yup.object({
     password:yup.string('invalid characters')
     .min(6,'must be up to 8 numbers')
     .required('This is a compulsory field')
-    .oneOf([yup.ref('passwordConfirmation'),null],'passwords must match')
+    
 })
 
-export function Signup({navigation}) {
+
+
+export function Signin({navigation}) {
     const [appIsReady, setAppIsReady] = useState(false);
     const [loading,setLoading] = useState(false); //for ActivitityIndicator
     const {setUid,setEmail,setUserName} = useContext(AppContext);
+
+
 
     useEffect(() => {
         async function prepare() {
@@ -75,19 +65,18 @@ export function Signup({navigation}) {
         <SafeArea>
             <ScrollView>
                 <Text style={styles.brand}>Thrift</Text>
-                <Text style={styles.intro}>Create an account to join
-                Thrift cooperative society and enjoy tons of benefits</Text>
+                <Text style={styles.intro}>Sign in to an existing account</Text>
 
                 <View style={styles.alreadyHaveAccount}>
-                    <Text style={styles.infoTitle}>Already have an account?</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Sign in')}>
+                    <Text style={styles.infoTitle}>Don't have an account?</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                         <FontAwesomeIcon icon={faCircleArrowRight}
-                        color={Theme.colors.purple700}
+                        color={Theme.colors.blue900}
                         size={Theme.sizes[5]}/>
                     </TouchableOpacity>
                 </View>
-                
-                    <Formik
+
+                <Formik
                     initialValues={{
                         lastName:'',
                         firstName:'',
@@ -95,18 +84,18 @@ export function Signup({navigation}) {
                         email:'',
                         password:'',
                         passwordConfirmation:'',
+                        
                     }}
                     
                     onSubmit={(values,action) => {
                         setLoading(true),
-                        createUserWithEmailAndPassword(authentication,values.email,values.password)
+                        signInWithEmailAndPassword(authentication,values.email,values.password)
                         .then(() => {
                             // To get the user uid
                             onAuthStateChanged(authentication,user => {
                                 setEmail(values.email);
                                 setUid(user.uid);
                                 setUserName({fname:values.firstName,lname:values.lastName});
-
                                 navigation.navigate('My Home')
                             })
                         })
@@ -120,46 +109,6 @@ export function Signup({navigation}) {
                             return (
                                 <View style={styles.form}>
                                     {loading ? <ActivityIndicator size='large' color={Theme.colors.purple900}/> : null}
-                                    
-                                    <TextInput 
-                                    placeholder="Last name"
-                                    mode="outlined"
-                                    outlineColor={Theme.colors.purple300}
-                                    activeOutlineColor={Theme.colors.purple500}
-                                    style={{fontSize:24,color:'#3C4048',marginBottom:Theme.sizes[1]}}
-                                    onChangeText={handleChange('lastName')}
-                                    onBlur={handleBlur('lastName')}
-                                    value={values.lastName}/>
-                                    <Text style={{display:touched.lastName && errors.lastName ? 'flex' : 'none', color:'red'}}>
-                                        {touched.lastName && errors.lastName}
-                                    </Text>
-                                    
-                                    <TextInput 
-                                    placeholder="First name"
-                                    mode="outlined"
-                                    outlineColor={Theme.colors.purple300}
-                                    activeOutlineColor={Theme.colors.purple500}
-                                    style={{fontSize:24,color:'#3C4048',marginBottom:Theme.sizes[1]}}
-                                    onChangeText={handleChange('firstName')}
-                                    onBlur={handleBlur('firstName')}
-                                    value={values.firstName}/>
-                                    <Text style={{display:touched.firstName && errors.firstName ? 'flex' : 'none', color:'red'}}>
-                                        {touched.firstName && errors.firstName}
-                                    </Text>
-                                    
-                                    <TextInput 
-                                    placeholder="Phone number"
-                                    mode="outlined"
-                                    outlineColor={Theme.colors.purple300}
-                                    activeOutlineColor={Theme.colors.purple500}
-                                    style={{fontSize:24,color:'#3C4048',marginBottom:Theme.sizes[1]}}
-                                    keyboardType='phone-pad'
-                                    onChangeText={handleChange('phoneNumber')}
-                                    onBlur={handleBlur('phoneNumber')}
-                                    value={values.phoneNumber}/>
-                                    <Text style={{display:touched.phoneNumber && errors.phoneNumber ? 'flex' : 'none', color:'red'}}>
-                                        {touched.phoneNumber && errors.phoneNumber}
-                                    </Text>
                                     
                                     <TextInput 
                                     placeholder="email address"
@@ -176,7 +125,7 @@ export function Signup({navigation}) {
                                     </Text>
                                 
                                     <TextInput 
-                                    placeholder="create password"
+                                    placeholder="Enter password"
                                     mode="outlined"
                                     outlineColor={Theme.colors.purple300}
                                     activeOutlineColor={Theme.colors.purple500}
@@ -188,30 +137,20 @@ export function Signup({navigation}) {
                                     <Text style={{display:touched.password && errors.password ? 'flex' : 'none', color:'red'}}>
                                         {touched.password && errors.password}
                                     </Text>
-
-                                    <TextInput 
-                                    placeholder="confirm password"
-                                    mode="outlined"
-                                    outlineColor={Theme.colors.purple300}
-                                    activeOutlineColor={Theme.colors.purple500}
-                                    style={{fontSize:24,color:'#3C4048',marginBottom:Theme.sizes[3]}}
-                                    secureTextEntry={true}
-                                    onChangeText={handleChange('passwordConfirmation')}
-                                    onBlur={handleBlur('passwordConfirmation')}
-                                    value={values.passwordConfirmation}/>
-
+                                    
                                     <Button
                                     mode="contained"
                                     color={Theme.colors.purple700}
                                     contentStyle={{paddingVertical:Theme.sizes[3]}}
                                     onPress={() => {handleSubmit();
                                     }}>
-                                        Create Acccount</Button>
+                                        Sign in</Button>
                                 </View>
                             )
                         }}
                     </Formik>
-            
+
+                
             </ScrollView>
         </SafeArea>
     )
@@ -232,7 +171,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-around',
         alignItems:'center',
         borderWidth:1,
-        borderColor:Theme.colors.purple300,
+        borderColor:Theme.colors.blue700,
         borderRadius:6,
         paddingVertical:Theme.sizes[2],
         marginTop:Theme.sizes[2],
@@ -242,7 +181,6 @@ const styles = StyleSheet.create({
         fontSize:Theme.fonts.fontSizePoint.h5
     },
     form:{
-        marginTop:Theme.sizes[2],
-        marginBottom:Theme.sizes[3]
+        marginTop:Theme.sizes[2]
     }
 })
