@@ -1,31 +1,10 @@
-import { useState, useContext } from 'react';
-import { AppContext } from '../utils/globals';
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {SafeArea} from '../utils/safearea';
 import { Theme } from '../utils/theme';
-import { db } from '../firebase/firebase.settings';
-import { addDoc,collection } from 'firebase/firestore';
 
-
-export function Deposit ({navigation,route}) {
-    const amount = 5000;
-    const desc = 'daily contribution';
-    const {uid} = useContext(AppContext);
-    //TimeStamp
-
-    addDoc(collection(db,'statment'),{
-        amount:amount,
-        description:desc,
-        by:uid,
-        timestamp:new Date().getTime()
-    })
-    .then(() =>{
-        console.log(`You have successful made a deposite of $(amount)`)
-    })
-    .catch((err) =>{
-
-    })
-     return(
+export function Transfer ({navigation,route}) {
+    
+    return(
         <SafeArea>
             <ScrollView>
                 
@@ -36,7 +15,7 @@ export function Deposit ({navigation,route}) {
                 </View>
                 <View style={styles.Amt1}>
                     <Text style={styles.Amt2}>Amount</Text>
-                    <TextInput style={styles.Amt3}  placeholder="$1000"/>
+                    <Text style={styles.Amt3}>$140</Text>
                     <View style={styles.line}></View>
                     <Text style={styles.Amt2}>Note</Text>
                     <Text style={styles.Amt3}>Plumbing Service</Text>
@@ -45,10 +24,13 @@ export function Deposit ({navigation,route}) {
                     <View style={styles.impot}>
                     <Text style={styles.impot2}>Important:</Text>
                     <Text style={styles.impot3}>Check the @ChipperTag before sending</Text>
+                    
+                    
+
                     </View>
                     <TouchableOpacity>
                         <View style={styles.send}>
-                            <Text style={styles.send2}>Deposite</Text>
+                            <Text style={styles.send2}>Send</Text>
                         </View>
                     </TouchableOpacity>
                     

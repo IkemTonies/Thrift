@@ -63,7 +63,7 @@ export function Signin({navigation}) {
 
     return (
         <SafeArea>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <Text style={styles.brand}>Thrift</Text>
                 <Text style={styles.intro}>Sign in to an existing account</Text>
 
@@ -78,12 +78,10 @@ export function Signin({navigation}) {
 
                 <Formik
                     initialValues={{
-                        lastName:'',
-                        firstName:'',
-                        phoneNumber:'',
+                        
                         email:'',
                         password:'',
-                        passwordConfirmation:'',
+                        
                         
                     }}
                     
@@ -95,7 +93,6 @@ export function Signin({navigation}) {
                             onAuthStateChanged(authentication,user => {
                                 setEmail(values.email);
                                 setUid(user.uid);
-                                setUserName({fname:values.firstName,lname:values.lastName});
                                 navigation.navigate('My Home')
                             })
                         })

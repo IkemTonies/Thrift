@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View,TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, View,TouchableOpacity, TextInput } from 'react-native';
 import {SafeArea} from '../utils/safearea';
 import { Theme } from '../utils/theme';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -14,11 +14,11 @@ export function Withdraw () {
             <FontAwesomeIcon icon={faCircleInfo} size={35}
                     color={'purple'}/>
             </View> 
-            <Text style={styles.send3}>Available balance:₦50,000</Text>  
+            <Text style={styles.send3}>Available balance:$50,000</Text>  
             </View>
             <View style={styles.contanier2}>
         <View style={styles.send1}>
-            <Text style={styles.send4}>₦2,000</Text>
+            <TextInput style={styles.send4} placeholder="$0.000"/>
             
         </View> 
         <TouchableOpacity>
@@ -85,5 +85,9 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         borderRadius:10
+    },
+    withD3:{
+        fontSize:20,
+        color:'#fff'
     }
 })

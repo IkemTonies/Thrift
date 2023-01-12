@@ -73,7 +73,7 @@ export function Signup({navigation}) {
 
     return (
         <SafeArea>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <Text style={styles.brand}>Thrift</Text>
                 <Text style={styles.intro}>Create an account to join
                 Thrift cooperative society and enjoy tons of benefits</Text>
